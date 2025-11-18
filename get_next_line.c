@@ -12,16 +12,26 @@
 
 #include "get_next_line.h"
 
+
+    // char *line = ft_substr(remain, 0, newline_pos - remain + 1); // строка до \n
+    // char *tmp = ft_strdup(newline_pos + 1);                     // остаток
+
 char *get_next_line(int fd)
 {
-	char		buffer[BUFFER_SIZE + 1];
-	static char	*remain;
-	char		*line;
+	char		buffer[BUFFER_SIZE];
+	static char	*line;
 	
 
-	read(fd, buffer, BUFFER_SIZE);
+	if (!line)
+	{
+		read(fd, buffer, BUFFER_SIZE);
+	}
+
+
+
+	
 	buffer[BUFFER_SIZE] = 0;
-	printf("%s\n", buffer);
+
 	
 
 	return (line);
