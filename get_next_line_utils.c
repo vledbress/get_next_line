@@ -6,7 +6,7 @@
 /*   By: vborysov <vborysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 10:50:07 by vborysov          #+#    #+#             */
-/*   Updated: 2025/11/18 10:50:07 by vborysov         ###   ########.fr       */
+/*   Updated: 2025/11/19 16:56:21 by vborysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,58 @@
 static size_t	ft_strlen(char *s1)
 {
 	size_t	len;
-
+	if (!s1)
+		return (0);
 	len = 0;
 	while (s1[len])
 		len++;
 	return (len);
 }
 
-char *	ft_strjoin(char	*s1, char	*s2)
+char *	ft_strchr(char *s, char c)
+{
+	if (!s)
+		return (NULL);
+	while (*s)
+	{
+		if (*s == c)
+			return (s);
+		s++;
+	}
+	return (NULL);
+}
+
+char *ft_substr(char *s, size_t start, size_t len)
+{
+	char	*result;
+	size_t	index;
+	
+	if (!s)
+		return (NULL);
+	result = (char *)malloc(len + 1);
+	if (!result)
+		return (NULL);
+	index = 0;
+	while (s[index + start] && index < len)
+	{
+		result[index] = s[index + start];
+		index++;
+	}
+	result[index] = 0;
+	return (result);
+}
+
+char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*result;
 	size_t	i;
 	size_t	j;
 
-	if (!s1 && !s2)
-		return (NULL);
-	result = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!s1) // если stash пустой, просто дублируем s2
+		return (ft_substr(s2, 0, ft_strlen(s2)));
+	if (!s2)
+		return (s1); // s2 пустой, ничего не добавляем
+	result = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!result)
 		return (NULL);
 	i = 0;
@@ -45,19 +81,35 @@ char *	ft_strjoin(char	*s1, char	*s2)
 		result[i + j] = s2[j];
 		j++;
 	}
-	result[i + j] = '\0';
-	return (result);
+	return (result[i + j] = '\0', free(s1), result);
 }
 
-char *	ft_strchr(char *s, char c)
+char *ft_extract_line(char *stash)
 {
-	if (!s)
+	char	*newline;
+	size_t	len;
+
+	if (!stash || !stash[0])
 		return (NULL);
-	while (*s)
-	{
-		if (*s == c)
-			return (s);
-		s++;
-	}
-	return (NULL);
+	newline = ft_strchr(stash, '\n');
+	if (newline)
+		len = (newline - stash) + 1;
+	else
+		len = ft_strlen(stash);
+	return (ft_substr(stash, 0, len));
+}
+
+char	*ft_clean_stash(char *stash)
+{
+	char	*newline;
+	char	*new_stash;
+	size_t	start;
+
+	newline = ft_strchr(stash, '\n');
+	if (!newline)
+		return (free(stash), NULL);
+	start = (newline - stash) + 1;
+	new_stash = ft_substr(stash, start, ft_strlen(stash) - start);
+	free(stash);
+	return (new_stash);
 }

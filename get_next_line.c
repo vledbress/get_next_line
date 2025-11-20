@@ -6,33 +6,44 @@
 /*   By: vborysov <vborysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 10:50:04 by vborysov          #+#    #+#             */
-/*   Updated: 2025/11/18 11:22:02 by vborysov         ###   ########.fr       */
+/*   Updated: 2025/11/20 23:41:46 by vborysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-
-    // char *line = ft_substr(remain, 0, newline_pos - remain + 1); // строка до \n
-    // char *tmp = ft_strdup(newline_pos + 1);                     // остаток
+char	*ft_strchr(char *s, char c); 
+char	*ft_strjoin(char *s1, char *s2);
+char	*ft_extract_line(char *stash);
+char	*ft_clean_stash(char *stash);
 
 char *get_next_line(int fd)
 {
-	char		buffer[BUFFER_SIZE];
-	static char	*line;
-	
+    char        buffer[BUFFER_SIZE + 1];
+    static char *stash;
+	char		*line;
+    ssize_t     bytes_read;
 
-	if (!line)
-	{
-		read(fd, buffer, BUFFER_SIZE);
-	}
-
-
-
-	
-	buffer[BUFFER_SIZE] = 0;
-
-	
-
-	return (line);
+    if (fd < 0 || BUFFER_SIZE <= 0)
+        return (NULL);
+    bytes_read = 1;
+    while ((!ft_strchr(stash, '\n')) && bytes_read > 0)
+    {
+        bytes_read = read(fd, buffer, BUFFER_SIZE);
+        if (bytes_read == -1)
+            return (free(stash), stash = NULL, NULL);
+        if (bytes_read > 0)
+        {
+            buffer[bytes_read] = '\0';         
+            stash = ft_strjoin(stash, buffer);
+            if (!stash)
+                return (NULL);
+        }
+    }
+	line = ft_extract_line(stash);
+    stash = ft_clean_stash(stash);
+    return (line);
 }
