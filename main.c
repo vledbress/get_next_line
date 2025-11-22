@@ -2,17 +2,17 @@
 #include <fcntl.h>
 #include <stdio.h>
 
-int main(void)
+int main(int argc, char **argv)
 {
-    int fd = open("test", O_RDONLY);
+	if (argc != 2)
+		return (perror("wrong args\n"), 1);
+
+    int fd = open(argv[1], O_RDONLY);
     char *line;
 
     if (fd < 0)
-    {
-        perror("open");
-        return 1;
-    }
-
+    	return (perror("open"), 1);
+	
     while ((line = get_next_line(fd)) != NULL)
     {
         printf("LINE: %s", line);

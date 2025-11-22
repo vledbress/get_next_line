@@ -6,7 +6,7 @@
 /*   By: vborysov <vborysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 10:50:07 by vborysov          #+#    #+#             */
-/*   Updated: 2025/11/19 16:56:21 by vborysov         ###   ########.fr       */
+/*   Updated: 2025/11/22 22:51:04 by vborysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,10 @@ char	*ft_strjoin(char *s1, char *s2)
 	size_t	i;
 	size_t	j;
 
-	if (!s1) // если stash пустой, просто дублируем s2
+	if (!s1)
 		return (ft_substr(s2, 0, ft_strlen(s2)));
 	if (!s2)
-		return (s1); // s2 пустой, ничего не добавляем
+		return (s1);
 	result = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!result)
 		return (NULL);
@@ -84,20 +84,20 @@ char	*ft_strjoin(char *s1, char *s2)
 	return (result[i + j] = '\0', free(s1), result);
 }
 
-char *ft_extract_line(char *stash)
+char	*ft_extract_line(char *stash)
 {
-	char	*newline;
-	size_t	len;
-
-	if (!stash || !stash[0])
+	size_t i;
+	
+	i = 0;
+	if (!stash)
 		return (NULL);
-	newline = ft_strchr(stash, '\n');
-	if (newline)
-		len = (newline - stash) + 1;
-	else
-		len = ft_strlen(stash);
-	return (ft_substr(stash, 0, len));
+	while (stash[i] && stash[i] != '\n')
+		i++;
+	if (stash[i] == '\n')
+		i++;
+	return (ft_substr(stash, 0, i));
 }
+
 
 char	*ft_clean_stash(char *stash)
 {

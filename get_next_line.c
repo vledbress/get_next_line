@@ -6,7 +6,7 @@
 /*   By: vborysov <vborysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 10:50:04 by vborysov          #+#    #+#             */
-/*   Updated: 2025/11/20 23:41:46 by vborysov         ###   ########.fr       */
+/*   Updated: 2025/11/22 22:48:22 by vborysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,20 +29,16 @@ char *get_next_line(int fd)
 
     if (fd < 0 || BUFFER_SIZE <= 0)
         return (NULL);
-    bytes_read = 1;
-    while ((!ft_strchr(stash, '\n')) && bytes_read > 0)
-    {
-        bytes_read = read(fd, buffer, BUFFER_SIZE);
-        if (bytes_read == -1)
-            return (free(stash), stash = NULL, NULL);
-        if (bytes_read > 0)
-        {
-            buffer[bytes_read] = '\0';         
-            stash = ft_strjoin(stash, buffer);
-            if (!stash)
-                return (NULL);
-        }
-    }
+	while (!ft_strchr(stash, '\n'))
+	{
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_read <= 0)
+			break ;
+		buffer[bytes_read] = 0;
+		stash = ft_strjoin(stash, buffer);
+		if (!stash)
+			return (free(stash), stash = NULL, NULL);
+	}
 	line = ft_extract_line(stash);
     stash = ft_clean_stash(stash);
     return (line);
