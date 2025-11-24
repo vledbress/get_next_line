@@ -6,7 +6,7 @@
 /*   By: vborysov <vborysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 10:50:07 by vborysov          #+#    #+#             */
-/*   Updated: 2025/11/22 22:51:04 by vborysov         ###   ########.fr       */
+/*   Updated: 2025/11/24 11:31:08 by vborysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static size_t	ft_strlen(char *s1)
 	return (len);
 }
 
-char *	ft_strchr(char *s, char c)
+char	*ft_strchr(char *s, char c)
 {
 	if (!s)
 		return (NULL);
@@ -36,7 +36,7 @@ char *	ft_strchr(char *s, char c)
 	return (NULL);
 }
 
-char *ft_substr(char *s, size_t start, size_t len)
+char	*ft_substr(char *s, size_t start, size_t len)
 {
 	char	*result;
 	size_t	index;
@@ -97,19 +97,29 @@ char	*ft_extract_line(char *stash)
 		i++;
 	return (ft_substr(stash, 0, i));
 }
-
-
-char	*ft_clean_stash(char *stash)
+char    *ft_clean_stash(char *stash)
 {
-	char	*newline;
-	char	*new_stash;
-	size_t	start;
+    char    *newline;
+    char    *new_stash;
+    size_t  start;
+    size_t  len;
 
-	newline = ft_strchr(stash, '\n');
-	if (!newline)
-		return (free(stash), NULL);
-	start = (newline - stash) + 1;
-	new_stash = ft_substr(stash, start, ft_strlen(stash) - start);
-	free(stash);
-	return (new_stash);
+    if (!stash)
+        return (NULL);
+
+    newline = ft_strchr(stash, '\n');
+    if (!newline)
+        return (free(stash), NULL);
+
+    start = (newline - stash) + 1;
+    len = ft_strlen(stash);
+
+    // Если \n был последним символом — остатка нет
+    if (start >= len)
+        return (free(stash), NULL);
+
+    new_stash = ft_substr(stash, start, len - start);
+    free(stash);
+    return (new_stash);
 }
+
