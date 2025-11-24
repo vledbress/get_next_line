@@ -6,15 +6,16 @@
 /*   By: vborysov <vborysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 10:50:07 by vborysov          #+#    #+#             */
-/*   Updated: 2025/11/24 11:31:08 by vborysov         ###   ########.fr       */
+/*   Updated: 2025/11/24 14:12:41 by vborysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 
-static size_t	ft_strlen(char *s1)
+size_t	ft_strlen(char	*s1)
 {
 	size_t	len;
+
 	if (!s1)
 		return (0);
 	len = 0;
@@ -40,7 +41,7 @@ char	*ft_substr(char *s, size_t start, size_t len)
 {
 	char	*result;
 	size_t	index;
-	
+
 	if (!s)
 		return (NULL);
 	result = (char *)malloc(len + 1);
@@ -83,43 +84,3 @@ char	*ft_strjoin(char *s1, char *s2)
 	}
 	return (result[i + j] = '\0', free(s1), result);
 }
-
-char	*ft_extract_line(char *stash)
-{
-	size_t i;
-	
-	i = 0;
-	if (!stash)
-		return (NULL);
-	while (stash[i] && stash[i] != '\n')
-		i++;
-	if (stash[i] == '\n')
-		i++;
-	return (ft_substr(stash, 0, i));
-}
-char    *ft_clean_stash(char *stash)
-{
-    char    *newline;
-    char    *new_stash;
-    size_t  start;
-    size_t  len;
-
-    if (!stash)
-        return (NULL);
-
-    newline = ft_strchr(stash, '\n');
-    if (!newline)
-        return (free(stash), NULL);
-
-    start = (newline - stash) + 1;
-    len = ft_strlen(stash);
-
-    // Если \n был последним символом — остатка нет
-    if (start >= len)
-        return (free(stash), NULL);
-
-    new_stash = ft_substr(stash, start, len - start);
-    free(stash);
-    return (new_stash);
-}
-

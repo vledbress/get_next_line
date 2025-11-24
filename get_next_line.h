@@ -6,7 +6,7 @@
 /*   By: vborysov <vborysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 10:28:38 by vborysov          #+#    #+#             */
-/*   Updated: 2025/11/24 11:23:43 by vborysov         ###   ########.fr       */
+/*   Updated: 2025/11/24 14:11:30 by vborysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,6 @@
 # include <unistd.h>
 # include <stdio.h>
 
-char *get_next_line(int fd);
+char	*get_next_line(int fd);
 
-# endif
+#endif

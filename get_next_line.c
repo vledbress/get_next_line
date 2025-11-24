@@ -6,7 +6,7 @@
 /*   By: vborysov <vborysov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 10:50:04 by vborysov          #+#    #+#             */
-/*   Updated: 2025/11/22 22:48:22 by vborysov         ###   ########.fr       */
+/*   Updated: 2025/11/24 14:13:06 by vborysov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,55 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-char	*ft_strchr(char *s, char c); 
+char	*ft_strchr(char *s, char c);
 char	*ft_strjoin(char *s1, char *s2);
-char	*ft_extract_line(char *stash);
-char	*ft_clean_stash(char *stash);
+size_t	ft_strlen(char	*s1);
+char	*ft_substr(char *s, size_t start, size_t len);
 
-char *get_next_line(int fd)
+char	*ft_extract_line(char *stash)
 {
-    char        buffer[BUFFER_SIZE + 1];
-    static char *stash;
-	char		*line;
-    ssize_t     bytes_read;
+	size_t	i;
 
-    if (fd < 0 || BUFFER_SIZE <= 0)
-        return (NULL);
+	i = 0;
+	if (!stash)
+		return (NULL);
+	while (stash[i] && stash[i] != '\n')
+		i++;
+	if (stash[i] == '\n')
+		i++;
+	return (ft_substr(stash, 0, i));
+}
+
+char	*ft_clean_stash(char	*stash)
+{
+	char	*newline;
+	char	*new_stash;
+	size_t	start;
+	size_t	len;
+
+	if (!stash)
+		return (NULL);
+	newline = ft_strchr(stash, '\n');
+	if (!newline)
+		return (free(stash), NULL);
+	start = (newline - stash) + 1;
+	len = ft_strlen(stash);
+	if (start >= len)
+		return (free(stash), NULL);
+	new_stash = ft_substr(stash, start, len - start);
+	free(stash);
+	return (new_stash);
+}
+
+char	*get_next_line(int fd)
+{
+	char		buffer[BUFFER_SIZE + 1];
+	static char	*stash;
+	char		*line;
+	ssize_t		bytes_read;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
 	while (!ft_strchr(stash, '\n'))
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
@@ -40,6 +75,6 @@ char *get_next_line(int fd)
 			return (free(stash), stash = NULL, NULL);
 	}
 	line = ft_extract_line(stash);
-    stash = ft_clean_stash(stash);
-    return (line);
+	stash = ft_clean_stash(stash);
+	return (line);
 }
